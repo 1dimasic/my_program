@@ -1,0 +1,57 @@
+* {
+    box-sizing: border-box;
+}
+
+.parent {
+    background-color: deepskyblue;
+    min-height: 100vh;
+    display: flex;
+    align-items:center;
+    justify-content: center;
+}
+
+.child {
+    min-width: 910px;
+    max-width: 910px;
+    max-height: 645px;
+    background-color: #E6E7E7;
+
+}
+
+.header > div {
+    display: inline-block;
+    font-family: Calibri, sans-serif;
+    background-color: #FED411;
+    width: 130px;
+    padding: 20px 0px;
+    font-size: 22px;
+    text-align: center;
+}
+
+.header > div:not(:last-child) {
+    border-right: solid 1px #B4B4B4;
+}
+
+th {
+    font-size: 12px;
+    font-family: Calibri, sans-serif;
+    padding: 5px 10px;
+    text-align: left;
+}
+
+
+td {
+    padding: 5px 10px;
+    text-align:center;
+    font-family: Calibri, sans-serif;
+    font-weight: 500;
+}
+
+.abc {
+    max-width: 28px;
+    width: 28px;
+}
+
+.bca {
+    font-size: 12px;
+}
