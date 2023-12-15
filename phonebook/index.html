@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script defer src="script.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="parent">
+    <div class="child">
+        <h1>Телефонная книга</h1>
+        <form class="form">
+            <label>
+                Имя
+                <input type="text" class="name">
+                <div class="error-message">Введите имя</div>
+            </label>
+            <label>
+                Фамилия
+                <input type="text" class="surname">
+                <div class="error-message">Введите фамилию</div>
+            </label>
+            <label>
+                Номер телефона
+                <input type="text" class="telephone-number">
+                <div class="error-message">Введите номер телефона</div>
+            </label>
+            <button class="add-button">Add</button>
+        </form>
+        <div>
+            <table class="contact-list">
+                <thead>
+                <tr>
+                    <th>№</th>
+                    <th>Фамилия</th>
+                    <th>Имя</th>
+                    <th>Номер телефона</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody class="abc"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
