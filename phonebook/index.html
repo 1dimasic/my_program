@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script defer src="jquery-3.7.1.js"></script>
+    <script defer src="jquery-ui-1.13.2/jquery-ui.js"></script>
     <script defer src="script.js"></script>
+    <link rel="stylesheet" href="reset.css">
+    <link rel="stylesheet" href="jquery-ui-1.13.2/jquery-ui.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -13,17 +17,17 @@
         <form class="form">
             <label>
                 Имя
-                <input type="text" class="name">
+                <input type="text" class="name" value="Дима">
                 <div class="error-message">Введите имя</div>
             </label>
             <label>
                 Фамилия
-                <input type="text" class="surname">
+                <input type="text" class="surname" value="Дима">
                 <div class="error-message">Введите фамилию</div>
             </label>
             <label>
                 Номер телефона
-                <input type="text" class="telephone-number">
+                <input type="tel" class="telephone-number" value="1">
                 <div class="error-message">Введите номер телефона</div>
             </label>
             <button class="add-button">Add</button>
@@ -37,10 +41,28 @@
                     <th>Имя</th>
                     <th>Номер телефона</th>
                     <th></th>
+                    <th>
+                        Выбрать все
+                        <input type="checkbox" class="select-all">
+                    </th>
                 </tr>
                 </thead>
                 <tbody class="abc"></tbody>
             </table>
+        </div>
+        <div>
+            <button type="button" class="del" disabled="disabled">Удалить</button>
+        </div>
+        <div>
+            <input type="text" class="fil">
+            <button type="button" class="qwer">1</button>
+            <button type="button">2</button>
+        </div>
+        <div style="display: none;" class="dialog-confirm" title="Подтвердите удаление?">
+             <p>
+                 <span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>
+                 Удалить?
+             </p>
         </div>
     </div>
 </div>

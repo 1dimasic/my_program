@@ -1,123 +1,149 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const form = document.querySelector(".form");
-    const inputName = document.querySelector(".name");
-    const inputSurname = document.querySelector(".surname");
-    const inputTelephoneNumber = document.querySelector(".telephone-number");
-    const abc = document.querySelector(".abc");
+$(function () {
+    const form = $(".form");
+    const inputName = $(".name");
+    const inputSurname = $(".surname");
+    const inputTelephoneNumber = $(".telephone-number");
+    const abc = $(".abc");
 
-    form.addEventListener("submit", function (e) {
+    form.submit(function (e) {
         e.preventDefault();
 
-        let flag = false;
-        let name = inputName.value.trim();
-        let surname = inputSurname.value.trim();
-        let telephoneNumber = inputTelephoneNumber.value.trim();
+        let isInvalid = false;
+        let name = inputName.val().trim();
+        let surname = inputSurname.val().trim();
+        let telephoneNumber = inputTelephoneNumber.val().trim();
 
-        inputName.classList.remove("invalid");
-        inputSurname.classList.remove("invalid");
-        inputTelephoneNumber.classList.remove("invalid");
+        inputName.removeClass("invalid");
+        inputSurname.removeClass("invalid");
+        inputTelephoneNumber.removeClass("invalid");
 
         if (name.length === 0) {
-            inputName.classList.add("invalid");
-            flag = true;
+            inputName.addClass("invalid");
+            isInvalid = true;
         }
 
         if (surname.length === 0) {
-            inputSurname.classList.add("invalid");
-            flag = true;
+            inputSurname.addClass("invalid");
+            isInvalid = true;
         }
 
         if (telephoneNumber.length === 0) {
-            inputTelephoneNumber.classList.add("invalid");
-            flag = true;
+            inputTelephoneNumber.addClass("invalid");
+            isInvalid = true;
         }
 
-        if (flag) {
+        $(".telephone-number").each(function () {
+            if ($(this).text() === telephoneNumber) {
+                inputTelephoneNumber.addClass("invalid");
+                isInvalid = true;
+            }
+        })
+
+        if (isInvalid) {
             return;
         }
 
-        const new_contact = document.createElement("tr")
-        new_contact.classList.add("contact")
+        const new_contact = $("<tr>").addClass("contact");
+        isInvalid = false;
+
+        function numbered() {
+            $(".id").each(function (i) {
+                $(this).text(i + 1);
+            })
+        }
 
         function set_view() {
-            let id = document.querySelectorAll(".abc > tr").length;
+            new_contact.html(`<td class="id"></td>
+                              <td class="name"></td>
+                              <td class="surname"></td>
+                              <td class="telephone-number"></td>
+                              <td>
+                              <button type="button" class="edit-button">Edit</button>
+                              <button type="button" class="delete-button">Delete</button>
+                              </td>
+                              <td>
+                                <input type="checkbox" class="checkbox">
+                              </td>`);
 
-            new_contact.innerHTML = `<td class="id"></td>
-                                     <td class="name"></td>
-                                     <td class="surname"></td>
-                                     <td class="telephone-number"></td>
-                                     <td>
-                                         <button type="button" class="edit-button">Edit</button>
-                                         <button type="button" class="delete-button">Delete</button>
-                                     </td>`;
-
-            new_contact.querySelector(".id").textContent = String(id + 1);
-            new_contact.querySelector(".name").textContent = name;
-            new_contact.querySelector(".surname").textContent = surname;
-            new_contact.querySelector(".telephone-number").textContent = telephoneNumber;
+            new_contact.find(".name").text(name);
+            new_contact.find(".surname").text(surname);
+            new_contact.find(".telephone-number").text(telephoneNumber);
             abc.append(new_contact);
+            numbered();
 
-            new_contact.querySelector(".delete-button").addEventListener("click", function () {
-                new_contact.remove();
+            new_contact.find(".delete-button").click(function () {
+                $(".dialog-confirm").dialog({
+                    resizable: false,
+                    height: "auto",
+                    width: 400,
+                    modal: true,
+                    buttons: {
+                        "Delete all items": function () {
+                            new_contact.remove();
+
+                            $(this).dialog("close");
+                            numbered();
+                        },
+                        Cancel: function () {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
             });
 
-            new_contact.querySelector(".edit-button").addEventListener("click", function () {
-                flag = false;
-                new_contact.innerHTML = `<td class="id"></td>
-                                         <td>
-                                            <input type="text" class="edit-name">
-                                            <div class="error-message">Введите имя</div>
-                                         </td>    
-                                         <td>                      
-                                            <input type="text" class="edit-surname">
-                                            <div class="error-message">Введите фамилию</div>
-                                         </td> 
-                                         <td>   
-                                             <input type="text" class="edit-telephone-number">
-                                             <div class="error-message">Введите номер телефона</div>
-                                         </td>
-                                         <button type="button" class="cancel-button">Cancel</button>
-                                         <button type="button" class="save-button">Save</button>`;
+            new_contact.find(".edit-button").click(function () {
+                isInvalid = false;
+                new_contact.html(`<td></td>
+                                  <td>
+                                    <input type="text" class="edit-name">
+                                    <div class="error-message">Введите имя</div>
+                                   </td>    
+                                   <td>                      
+                                    <input type="text" class="edit-surname">
+                                    <div class="error-message">Введите фамилию</div>
+                                   </td> 
+                                   <td>   
+                                    <input type="text" class="edit-telephone-number">
+                                    <div class="error-message">Введите номер телефона</div>
+                                   </td>
+                                   <td> 
+                                  <button type="button" class="cancel-button">Cancel</button>
+                                  <button type="button" class="save-button">Save</button>
+                                  </td>`);
 
-                const editName = new_contact.querySelector(".edit-name");
-                editName.value = name;
+                const editName = new_contact.find(".edit-name").val(name);
+                const editSurname = new_contact.find(".edit-surname").val(surname);
+                const editTelephoneNumber = new_contact.find(".edit-telephone-number").val(telephoneNumber);
 
-                const editSurname = new_contact.querySelector(".edit-surname");
-                editSurname.value = surname;
-
-                const editTelephoneNumber = new_contact.querySelector(".edit-telephone-number");
-                editTelephoneNumber.value = telephoneNumber;
-
-                new_contact.querySelector(".cancel-button").addEventListener("click", function () {
+                new_contact.find(".cancel-button").click(function () {
                     set_view();
                 });
 
-                new_contact.querySelector(".save-button").addEventListener("click", function () {
-                    const newName = editName.value.trim();
-                    const newSurname = editSurname.value.trim();
-                    const newTelephoneNumber = editTelephoneNumber.value.trim();
+                new_contact.find(".save-button").click(function () {
+                    const newName = editName.val().trim();
+                    const newSurname = editSurname.val().trim();
+                    const newTelephoneNumber = editTelephoneNumber.val().trim();
 
-                    editName.classList.remove("invalid");
-                    editSurname.classList.remove("invalid");
-                    editTelephoneNumber.classList.remove("invalid");
-
+                    editName.removeClass("invalid");
+                    editSurname.removeClass("invalid");
+                    editTelephoneNumber.removeClass("invalid");
 
                     if (newName.length === 0) {
-                        editName.classList.add("invalid");
-                        flag = true;
+                        editName.addClass("invalid");
+                        isInvalid = true;
                     }
 
                     if (newSurname.length === 0) {
-                        editSurname.classList.add("invalid");
-                        flag = true;
+                        editSurname.addClass("invalid");
+                        isInvalid = true;
                     }
 
                     if (newTelephoneNumber.length === 0) {
-                        editTelephoneNumber.classList.add("invalid");
-                        flag = true;
+                        editTelephoneNumber.addClass("invalid");
+                        isInvalid = true;
                     }
 
-                    if (flag) {
+                    if (isInvalid) {
                         return;
                     }
 
@@ -126,10 +152,45 @@ document.addEventListener("DOMContentLoaded", function () {
                     telephoneNumber = newTelephoneNumber;
                     set_view();
                 });
-
             });
-        }
 
+            $(".checkbox").click (function () {
+                if ($(this).is(":checked")) {
+                    $(".del").prop("disabled", false);
+                }
+                if ($(this).is(":not(:checked")) {
+                        $(".del").prop("disabled", true);
+                }
+            })
+
+            $(".del").click(function () {
+                new_contact.find(".checkbox:checked").each(function () {
+                    new_contact.remove();
+                })
+
+                numbered();
+                $(".del").prop("disabled", true);
+                $(".select-all").prop("checked", false);
+            });
+
+            $(".select-all").click (function () {
+               if($(this).is(":checked")) {
+                   $(".checkbox").prop("checked", true);
+                   $(".del").prop("disabled", false);
+               } else {
+                   $(".checkbox").prop("checked", false);
+                   $(".del").prop("disabled", true);
+               }
+            });
+
+            $(".qwer").click(function () {
+                const qwer = $(".fil").val().trim().toLowerCase();
+                new_contact.filter(function () {
+                    return $(this).text().toLowerCase().indexOf(qwer) === 0;
+                }).show();
+                
+            })
+        }
         set_view();
     });
 });

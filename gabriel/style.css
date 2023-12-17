@@ -20,11 +20,15 @@
 
 .header > div {
     display: inline-block;
-    font-family: Calibri, sans-serif;
-    background-color: #FED411;
+    font-family: Candara, sans-serif;
+    font-weight: 500;
+    letter-spacing: -1px;
+    color: #836E0D;
+    background-color: #FED514;
     width: 130px;
-    padding: 20px 0px;
-    font-size: 22px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-size: 24px;
     text-align: center;
 }
 
