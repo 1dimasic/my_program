@@ -8,7 +8,6 @@ $(function () {
     form.submit(function (e) {
         e.preventDefault();
 
-        let isInvalid = false;
         let name = inputName.val().trim();
         let surname = inputSurname.val().trim();
         let telephoneNumber = inputTelephoneNumber.val().trim();
@@ -19,38 +18,39 @@ $(function () {
 
         if (name.length === 0) {
             inputName.addClass("invalid");
-            isInvalid = true;
         }
 
         if (surname.length === 0) {
             inputSurname.addClass("invalid");
-            isInvalid = true;
         }
 
         if (telephoneNumber.length === 0) {
             inputTelephoneNumber.addClass("invalid");
-            isInvalid = true;
         }
 
         $(".telephone-number").each(function () {
             if ($(this).text() === telephoneNumber) {
                 inputTelephoneNumber.addClass("invalid");
-                isInvalid = true;
             }
         })
 
-        if (isInvalid) {
+        if (inputName.hasClass("invalid") || inputSurname.hasClass("invalid") || inputTelephoneNumber.hasClass("invalid")) {
             return;
         }
 
         const new_contact = $("<tr>").addClass("contact");
-        isInvalid = false;
 
         function numbered() {
             $(".id").each(function (i) {
                 $(this).text(i + 1);
             })
         }
+
+        function isInvalid() {
+
+        }
+
+        new_contact.removeClass(".fre");
 
         function set_view() {
             new_contact.html(`<td class="id"></td>
@@ -68,7 +68,13 @@ $(function () {
             new_contact.find(".name").text(name);
             new_contact.find(".surname").text(surname);
             new_contact.find(".telephone-number").text(telephoneNumber);
-            abc.append(new_contact);
+
+            if (new_contact.hasClass(".fre")) {
+                abc.appendTo(".fre")
+            } else {
+                abc.append(new_contact);
+            }
+
             numbered();
 
             new_contact.find(".delete-button").click(function () {
@@ -92,7 +98,7 @@ $(function () {
             });
 
             new_contact.find(".edit-button").click(function () {
-                isInvalid = false;
+                new_contact.addClass(".fre");
                 new_contact.html(`<td></td>
                                   <td>
                                     <input type="text" class="edit-name">
@@ -130,20 +136,17 @@ $(function () {
 
                     if (newName.length === 0) {
                         editName.addClass("invalid");
-                        isInvalid = true;
                     }
 
                     if (newSurname.length === 0) {
                         editSurname.addClass("invalid");
-                        isInvalid = true;
                     }
 
                     if (newTelephoneNumber.length === 0) {
                         editTelephoneNumber.addClass("invalid");
-                        isInvalid = true;
                     }
 
-                    if (isInvalid) {
+                    if (editName.hasClass(".invalid") || editSurname.hasClass(".invalid") || editTelephoneNumber.hasClass(".invalid")) {
                         return;
                     }
 
@@ -154,12 +157,12 @@ $(function () {
                 });
             });
 
-            $(".checkbox").click (function () {
+            $(".checkbox").click(function () {
                 if ($(this).is(":checked")) {
                     $(".del").prop("disabled", false);
                 }
                 if ($(this).is(":not(:checked")) {
-                        $(".del").prop("disabled", true);
+                    $(".del").prop("disabled", true);
                 }
             })
 
@@ -173,22 +176,26 @@ $(function () {
                 $(".select-all").prop("checked", false);
             });
 
-            $(".select-all").click (function () {
-               if($(this).is(":checked")) {
-                   $(".checkbox").prop("checked", true);
-                   $(".del").prop("disabled", false);
-               } else {
-                   $(".checkbox").prop("checked", false);
-                   $(".del").prop("disabled", true);
-               }
+            $(".select-all").click(function () {
+                if ($(this).is(":checked")) {
+                    $(".checkbox").prop("checked", true);
+                    $(".del").prop("disabled", false);
+                } else {
+                    $(".checkbox").prop("checked", false);
+                    $(".del").prop("disabled", true);
+                }
             });
 
             $(".qwer").click(function () {
                 const qwer = $(".fil").val().trim().toLowerCase();
-                new_contact.filter(function () {
-                    return $(this).text().toLowerCase().indexOf(qwer) === 0;
+                $(".contact").hide().filter(function () {
+                    return $(this).text().toLowerCase().indexOf(qwer) !== -1;
                 }).show();
-                
+            })
+
+            $(".rewq").click(function () {
+                $(".contact").show();
+                $(".fil").val("");
             })
         }
         set_view();
