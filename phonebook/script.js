@@ -1,8 +1,8 @@
 $(function () {
     const form = $(".form");
-    const inputName = $(".name");
-    const inputSurname = $(".surname");
-    const inputTelephoneNumber = $(".telephone-number");
+    const inputName = $("#name");
+    const inputSurname = $("#surname");
+    const inputTelephoneNumber = $("#telephone-number");
     const abc = $(".abc");
 
     form.submit(function (e) {
@@ -38,7 +38,7 @@ $(function () {
             return;
         }
 
-        const new_contact = $("<tr>").addClass("contact");
+        const contact = $("<tr>").addClass("contact");
 
         function numbered() {
             $(".id").each(function (i) {
@@ -46,38 +46,34 @@ $(function () {
             })
         }
 
-        function isInvalid() {
-
-        }
-
-        new_contact.removeClass(".fre");
+        contact.removeClass(".fre");
 
         function set_view() {
-            new_contact.html(`<td class="id"></td>
+            contact.html(`<td class="id"></td>
                               <td class="name"></td>
                               <td class="surname"></td>
                               <td class="telephone-number"></td>
                               <td>
-                              <button type="button" class="edit-button">Edit</button>
-                              <button type="button" class="delete-button">Delete</button>
+                              <button type="button" id="edit-button" class="small-button">Edit</button>
+                              <button type="button" id="delete-button" class="small-button">Delete</button>
                               </td>
                               <td>
                                 <input type="checkbox" class="checkbox">
                               </td>`);
 
-            new_contact.find(".name").text(name);
-            new_contact.find(".surname").text(surname);
-            new_contact.find(".telephone-number").text(telephoneNumber);
+            contact.find(".name").text(name);
+            contact.find(".surname").text(surname);
+            contact.find(".telephone-number").text(telephoneNumber);
 
-            if (new_contact.hasClass(".fre")) {
+            if (contact.hasClass(".fre")) {
                 abc.appendTo(".fre")
             } else {
-                abc.append(new_contact);
+                abc.append(contact);
             }
 
             numbered();
 
-            new_contact.find(".delete-button").click(function () {
+            contact.find("#delete-button").click(function () {
                 $(".dialog-confirm").dialog({
                     resizable: false,
                     height: "auto",
@@ -85,7 +81,7 @@ $(function () {
                     modal: true,
                     buttons: {
                         "Delete all items": function () {
-                            new_contact.remove();
+                            contact.remove();
 
                             $(this).dialog("close");
                             numbered();
@@ -97,35 +93,32 @@ $(function () {
                 });
             });
 
-            new_contact.find(".edit-button").click(function () {
-                new_contact.addClass(".fre");
-                new_contact.html(`<td></td>
+            contact.find("#edit-button").click(function () {
+                contact.addClass(".fre");
+                contact.html(`<td></td>
                                   <td>
-                                    <input type="text" class="edit-name">
-                                    <div class="error-message">Введите имя</div>
+                                    <input type="text" id="edit-name" class="edit-input-style">
                                    </td>    
                                    <td>                      
-                                    <input type="text" class="edit-surname">
-                                    <div class="error-message">Введите фамилию</div>
+                                    <input type="text" id="edit-surname" class="edit-input-style">
                                    </td> 
                                    <td>   
-                                    <input type="text" class="edit-telephone-number">
-                                    <div class="error-message">Введите номер телефона</div>
+                                    <input type="text" id="edit-telephone-number" class="edit-input-style">
                                    </td>
                                    <td> 
-                                  <button type="button" class="cancel-button">Cancel</button>
-                                  <button type="button" class="save-button">Save</button>
+                                  <button type="button" id="cancel-button" class="small-button">Cancel</button>
+                                  <button type="button" id="save-button" class="small-button">Save</button>
                                   </td>`);
 
-                const editName = new_contact.find(".edit-name").val(name);
-                const editSurname = new_contact.find(".edit-surname").val(surname);
-                const editTelephoneNumber = new_contact.find(".edit-telephone-number").val(telephoneNumber);
+                const editName = contact.find("#edit-name").val(name);
+                const editSurname = contact.find("#edit-surname").val(surname);
+                const editTelephoneNumber = contact.find("#edit-telephone-number").val(telephoneNumber);
 
-                new_contact.find(".cancel-button").click(function () {
+                contact.find("#cancel-button").click(function () {
                     set_view();
                 });
 
-                new_contact.find(".save-button").click(function () {
+                contact.find("#save-button").click(function () {
                     const newName = editName.val().trim();
                     const newSurname = editSurname.val().trim();
                     const newTelephoneNumber = editTelephoneNumber.val().trim();
@@ -158,17 +151,17 @@ $(function () {
             });
 
             $(".checkbox").click(function () {
-                if ($(this).is(":checked")) {
+                if ($(".checkbox").is(":checked")) {
                     $(".del").prop("disabled", false);
-                }
-                if ($(this).is(":not(:checked")) {
+                } else {
+                    $(".select-all").prop("checked", false);
                     $(".del").prop("disabled", true);
                 }
             })
 
             $(".del").click(function () {
-                new_contact.find(".checkbox:checked").each(function () {
-                    new_contact.remove();
+                contact.find(".checkbox:checked").each(function () {
+                    contact.remove();
                 })
 
                 numbered();
@@ -186,18 +179,19 @@ $(function () {
                 }
             });
 
-            $(".qwer").click(function () {
-                const qwer = $(".fil").val().trim().toLowerCase();
+            $(".set-filter").click(function () {
+                const searching_string = $(".filter").val().trim().toLowerCase();
                 $(".contact").hide().filter(function () {
-                    return $(this).text().toLowerCase().indexOf(qwer) !== -1;
+                    return $(this).text().toLowerCase().indexOf(searching_string) !== -1;
                 }).show();
             })
 
-            $(".rewq").click(function () {
+            $(".reset-filter").click(function () {
                 $(".contact").show();
-                $(".fil").val("");
+                $(".filter").val("");
             })
         }
+
         set_view();
     });
 });

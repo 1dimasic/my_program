@@ -15,54 +15,57 @@
     <div class="child">
         <h1>Телефонная книга</h1>
         <form class="form">
-            <label>
-                Имя
-                <input type="text" class="name" value="Дима">
-                <div class="error-message">Введите имя</div>
-            </label>
-            <label>
-                Фамилия
-                <input type="text" class="surname" value="Дима">
-                <div class="error-message">Введите фамилию</div>
-            </label>
-            <label>
-                Номер телефона
-                <input type="tel" class="telephone-number" value="1">
-                <div class="error-message">Введите номер телефона</div>
-            </label>
-            <button class="add-button">Add</button>
+            <div class="input-box">
+                <label>Имя</label>
+                <input type="text" id="name" class="input-style" value="Дима">
+                <span class="error-message">Введите имя</span>
+            </div>
+            <div class="input-box">
+                <label>Фамилия</label>
+                <input type="text" id="surname" class="input-style" value="Дима">
+                <span class="error-message">Введите фамилию</span>
+            </div>
+            <div class="input-box">
+                <label>Номер телефона </label>
+                <input type="tel" id="telephone-number" class="input-style" value="1">
+                <span class="error-message">Введите номер телефона</span>
+            </div>
+            <button class="button add_del_button">Добавить</button>
         </form>
-        <div>
-            <table class="contact-list">
-                <thead>
-                <tr>
-                    <th>№</th>
-                    <th>Фамилия</th>
-                    <th>Имя</th>
-                    <th>Номер телефона</th>
-                    <th></th>
-                    <th>
-                        Выбрать все
-                        <input type="checkbox" class="select-all">
-                    </th>
-                </tr>
-                </thead>
-                <tbody class="abc"></tbody>
-            </table>
+        <div class="search">
+            <div class="search-box">
+                <label>Поиск</label>
+                <input type="text" class="filter input-style">
+            </div>
+            <div>
+                <button class="button set-filter">Применить</button>
+                <button class="button reset-filter">Сбросить</button>
+            </div>
         </div>
+        <table class="contact-list">
+            <thead>
+            <tr>
+                <th>№</th>
+                <th>Фамилия</th>
+                <th>Имя</th>
+                <th>Номер телефона</th>
+                <th></th>
+                <th>
+                    <input type="checkbox" class="select-all">
+                </th>
+            </tr>
+            </thead>
+            <tbody class="abc"></tbody>
+        </table>
         <div>
-            <button type="button" class="del" disabled="disabled">Удалить</button>
+            <button type="button" class="button del add_del_button" disabled="disabled">Удалить</button>
         </div>
-        <div>
-            <input type="text" class="fil">
-            <button type="button" class="qwer">1</button>
-            <button type="button" class="rewq">2</button>
-        </div>
+
         <div style="display: none;" class="dialog-confirm" title="Подтвердите удаление?">
-             <p>
-                 <span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>
-                 Удалить?
-             </p>
+            <p>
+                <span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>
+                Удалить?
+            </p>
         </div>
     </div>
 </div>

@@ -2,10 +2,137 @@
     box-sizing: border-box;
 }
 
-.error-message {
-    display: none;
+body {
+    font-family: Calibri, sans-serif;
 }
 
-.invalid ~ .error-message {
-    display: block;
+.parent {
+    background-color: #FFF;
+}
+
+.child {
+    background-color: #FFF4;
+    min-height: 100vh;
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+    outline: #EEE solid 3px;
+    padding: 5px;
+}
+
+.child > h1 {
+    font-size: 22px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.input-style {
+    padding: 10px;
+    border-radius: 11px;
+    background-color: #fff;
+    width: 220px;
+    border: 2px solid navy;
+    font-size: 18px;
+}
+
+.form > div {
+    display: inline-block;
+    width: 33%;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.input-box {
+    position: relative;
+}
+
+.input-box > label {
+    position: absolute;
+    top: -10px;
+    left: 40px;
+    padding: 0 5px;
+    background-color: #fff;
+}
+
+.error-message {
+    visibility: hidden;
+}
+
+.invalid + .error-message {
+    font-size: 14px;
+    color: darkred;
+    margin-top: 5px;
+    visibility: visible;
+    font-weight: bold;
+}
+
+.button {
+    font-size: 14px;
+    padding: 10px;
+    border-radius: 11px;
+}
+
+.add_del_button {
+    float: right;
+    margin-right: 20px;
+}
+
+.search > div {
+    display: inline-block;
+}
+
+.search-box {
+    position: relative;
+    clear: both;
+}
+
+.search-box > input {
+    margin-left: 20px;
+}
+
+.search-box > label {
+    top: -10px;
+    left: 40px;
+    padding: 0 5px;
+    background-color: #fff;
+    position: absolute;
+}
+
+.contact-list {
+    width: 100%;
+}
+
+.contact-list th {
+    padding: 5px 10px;
+    font-weight: 700;
+    border-bottom: 1px solid;
+}
+
+.contact-list {
+    margin-bottom: 10px;
+}
+
+.contact-list td {
+    text-align: center;
+}
+
+.contact-list td:not(:last-child) {
+    border-right: solid 1px #B4B4B4;
+}
+
+.contact-list th:not(:last-child) {
+    border-right: solid 1px #B4B4B4;
+}
+
+.small-button {
+    font-size: 12px;
+    border-radius: 6px;
+    margin-left: 5px;
+}
+
+.edit-input-style {
+    width: 150px;
+    margin: 3px;
+    border-radius: 6px;
+    padding: 0 3px;
 }
