@@ -3,7 +3,7 @@ $(function () {
     const inputName = $("#name");
     const inputSurname = $("#surname");
     const inputTelephoneNumber = $("#telephone-number");
-    const abc = $(".abc");
+    const contacts = $(".contact-list");
 
     form.submit(function (e) {
         e.preventDefault();
@@ -34,7 +34,8 @@ $(function () {
             }
         })
 
-        if (inputName.hasClass("invalid") || inputSurname.hasClass("invalid") || inputTelephoneNumber.hasClass("invalid")) {
+        if (inputName.hasClass("invalid") || inputSurname.hasClass("invalid") ||
+            inputTelephoneNumber.hasClass("invalid")) {
             return;
         }
 
@@ -46,34 +47,34 @@ $(function () {
             })
         }
 
-        contact.removeClass(".fre");
 
         function set_view() {
             contact.html(`<td class="id"></td>
-                              <td class="name"></td>
-                              <td class="surname"></td>
-                              <td class="telephone-number"></td>
-                              <td>
-                              <button type="button" id="edit-button" class="small-button">Edit</button>
-                              <button type="button" id="delete-button" class="small-button">Delete</button>
-                              </td>
-                              <td>
-                                <input type="checkbox" class="checkbox">
-                              </td>`);
+                          <td class="name"></td>
+                          <td class="surname"></td>
+                          <td class="telephone-number"></td>
+                          <td>
+                            <button type="button" class="edit-button in-table-button">Редактировать</button>
+                            <button type="button" class="delete-button in-table-button">Удалить</button>
+                          </td>
+                          <td>
+                            <input type="checkbox" class="checkbox">
+                          </td>`);
 
             contact.find(".name").text(name);
             contact.find(".surname").text(surname);
             contact.find(".telephone-number").text(telephoneNumber);
 
-            if (contact.hasClass(".fre")) {
-                abc.appendTo(".fre")
+            if (contact.hasClass("in-place")) {
+                contacts.appendTo("in-place")
+                contact.removeClass("in-place");
             } else {
-                abc.append(contact);
+                contacts.append(contact);
             }
 
             numbered();
 
-            contact.find("#delete-button").click(function () {
+            contact.find(".delete-button").click(function () {
                 $(".dialog-confirm").dialog({
                     resizable: false,
                     height: "auto",
@@ -93,32 +94,32 @@ $(function () {
                 });
             });
 
-            contact.find("#edit-button").click(function () {
-                contact.addClass(".fre");
+            contact.find(".edit-button").click(function () {
+                contact.addClass("in-place");
                 contact.html(`<td></td>
                                   <td>
-                                    <input type="text" id="edit-name" class="edit-input-style">
+                                    <input type="text" class="edit-name edit-input-style">
                                    </td>    
                                    <td>                      
-                                    <input type="text" id="edit-surname" class="edit-input-style">
+                                    <input type="text" class="edit-surname edit-input-style">
                                    </td> 
                                    <td>   
-                                    <input type="text" id="edit-telephone-number" class="edit-input-style">
+                                    <input type="tel" class="edit-telephone-number edit-input-style">
                                    </td>
                                    <td> 
-                                  <button type="button" id="cancel-button" class="small-button">Cancel</button>
-                                  <button type="button" id="save-button" class="small-button">Save</button>
+                                  <button type="button" class="cancel-button in-table-button">Отменить</button>
+                                  <button type="button" class="save-button in-table-button">Сохранить</button>
                                   </td>`);
 
-                const editName = contact.find("#edit-name").val(name);
-                const editSurname = contact.find("#edit-surname").val(surname);
-                const editTelephoneNumber = contact.find("#edit-telephone-number").val(telephoneNumber);
+                const editName = contact.find(".edit-name").val(name);
+                const editSurname = contact.find(".edit-surname").val(surname);
+                const editTelephoneNumber = contact.find(".edit-telephone-number").val(telephoneNumber);
 
-                contact.find("#cancel-button").click(function () {
+                contact.find(".cancel-button").click(function () {
                     set_view();
                 });
 
-                contact.find("#save-button").click(function () {
+                contact.find(".save-button").click(function () {
                     const newName = editName.val().trim();
                     const newSurname = editSurname.val().trim();
                     const newTelephoneNumber = editTelephoneNumber.val().trim();

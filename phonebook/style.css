@@ -26,7 +26,7 @@ body {
     margin-bottom: 20px;
 }
 
-.input-style {
+.input {
     padding: 10px;
     border-radius: 11px;
     background-color: #fff;
@@ -35,18 +35,19 @@ body {
     font-size: 18px;
 }
 
+.input:invalid {
+    border-color: red;
+}
+
 .form > div {
     display: inline-block;
     width: 33%;
     margin-bottom: 20px;
     text-align: center;
-}
-
-.input-box {
     position: relative;
 }
 
-.input-box > label {
+.form label {
     position: absolute;
     top: -10px;
     left: 40px;
@@ -72,25 +73,21 @@ body {
     border-radius: 11px;
 }
 
-.add_del_button {
+.add_delete_button {
     float: right;
     margin-right: 20px;
 }
 
 .search > div {
     display: inline-block;
-}
-
-.search-box {
     position: relative;
-    clear: both;
 }
 
-.search-box > input {
+.search input {
     margin-left: 20px;
 }
 
-.search-box > label {
+.search label {
     top: -10px;
     left: 40px;
     padding: 0 5px;
@@ -98,21 +95,18 @@ body {
     position: absolute;
 }
 
-.contact-list {
+.table {
     width: 100%;
+    margin: 10px 0;
 }
 
-.contact-list th {
-    padding: 5px 10px;
+.table th {
     font-weight: 700;
-    border-bottom: 1px solid;
+    border-bottom: 1px solid #B4B4B4;
+    padding: 4px 0;
 }
 
-.contact-list {
-    margin-bottom: 10px;
-}
-
-.contact-list td {
+.table td {
     text-align: center;
 }
 
@@ -120,19 +114,21 @@ body {
     border-right: solid 1px #B4B4B4;
 }
 
-.contact-list th:not(:last-child) {
+.table th:not(:last-child) {
     border-right: solid 1px #B4B4B4;
 }
 
-.small-button {
-    font-size: 12px;
-    border-radius: 6px;
-    margin-left: 5px;
+.edit-input-style {
+    width: 140px;
+    margin: 2px;
+    border-radius: 4px;
+    border: 1px solid black;
+    font-size: 14px;
 }
 
-.edit-input-style {
-    width: 150px;
-    margin: 3px;
-    border-radius: 6px;
-    padding: 0 3px;
+.in-table-button {
+    margin: 2px 2px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: 1px solid black;
 }

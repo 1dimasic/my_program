@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Телефонная книга</title>
     <script defer src="jquery-3.7.1.js"></script>
     <script defer src="jquery-ui-1.13.2/jquery-ui.js"></script>
     <script defer src="script.js"></script>
@@ -15,34 +15,34 @@
     <div class="child">
         <h1>Телефонная книга</h1>
         <form class="form">
-            <div class="input-box">
+            <div>
                 <label>Имя</label>
-                <input type="text" id="name" class="input-style" value="Дима">
+                <input type="text" id="name" class="input" value="Дима">
                 <span class="error-message">Введите имя</span>
             </div>
-            <div class="input-box">
+            <div>
                 <label>Фамилия</label>
-                <input type="text" id="surname" class="input-style" value="Дима">
+                <input type="text" id="surname" class="input" value="Дима">
                 <span class="error-message">Введите фамилию</span>
             </div>
-            <div class="input-box">
+            <div>
                 <label>Номер телефона </label>
-                <input type="tel" id="telephone-number" class="input-style" value="1">
+                <input type="tel" id="telephone-number" class="input" value="123">
                 <span class="error-message">Введите номер телефона</span>
             </div>
-            <button class="button add_del_button">Добавить</button>
+            <button class="button add_delete_button">Добавить</button>
         </form>
         <div class="search">
-            <div class="search-box">
+            <div>
                 <label>Поиск</label>
-                <input type="text" class="filter input-style">
+                <input type="text" class="input filter">
             </div>
             <div>
                 <button class="button set-filter">Применить</button>
                 <button class="button reset-filter">Сбросить</button>
             </div>
         </div>
-        <table class="contact-list">
+        <table class="table">
             <thead>
             <tr>
                 <th>№</th>
@@ -55,10 +55,10 @@
                 </th>
             </tr>
             </thead>
-            <tbody class="abc"></tbody>
+            <tbody class="contact-list"></tbody>
         </table>
         <div>
-            <button type="button" class="button del add_del_button" disabled="disabled">Удалить</button>
+            <button type="button" class="button add_delete_button" disabled="disabled">Удалить</button>
         </div>
 
         <div style="display: none;" class="dialog-confirm" title="Подтвердите удаление?">
