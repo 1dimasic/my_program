@@ -14,7 +14,7 @@ $(function () {
 
         inputName.removeClass("invalid");
         inputSurname.removeClass("invalid");
-        inputTelephoneNumber.removeClass("invalid");
+        inputTelephoneNumber.removeClass("invalid, repeated-tel-number");
 
         if (name.length === 0) {
             inputName.addClass("invalid");
@@ -30,12 +30,12 @@ $(function () {
 
         $(".telephone-number").each(function () {
             if ($(this).text() === telephoneNumber) {
-                inputTelephoneNumber.addClass("invalid");
+                inputTelephoneNumber.addClass("repeated-tel-number");
             }
         })
 
         if (inputName.hasClass("invalid") || inputSurname.hasClass("invalid") ||
-            inputTelephoneNumber.hasClass("invalid")) {
+            inputTelephoneNumber.hasClass("invalid") || inputTelephoneNumber.hasClass("repeated-tel-number")) {
             return;
         }
 
@@ -125,7 +125,8 @@ $(function () {
 
                     editName.removeClass("invalid");
                     editSurname.removeClass("invalid");
-                    editTelephoneNumber.removeClass("invalid");
+                    editTelephoneNumber.removeClass("invalid, repeated-tel-number");
+
 
                     if (newName.length === 0) {
                         editName.addClass("invalid");
@@ -141,13 +142,13 @@ $(function () {
 
                     $(".telephone-number").each(function () {
                         if ($(this).text() === newTelephoneNumber) {
-                            editTelephoneNumber.addClass("invalid");
+                            editTelephoneNumber.addClass("repeated-tel-number");
                         }
 
                     })
 
                     if (editName.hasClass("invalid") || editSurname.hasClass("invalid") ||
-                        editTelephoneNumber.hasClass("invalid")) {
+                        editTelephoneNumber.hasClass("invalid") || editTelephoneNumber.hasClass("repeated-tel-number")) {
                         return;
                     }
 
@@ -167,7 +168,7 @@ $(function () {
                 }
             })
 
-            $(".del").click(function () {
+            $(".delete-all-button").click(function () {
                 contact.find(".checkbox:checked").each(function () {
                     contact.remove();
                 })
@@ -200,6 +201,8 @@ $(function () {
             })
         }
 
+        inputName.text(" ");
         viewContactsList();
+
     });
 });

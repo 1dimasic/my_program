@@ -4,26 +4,27 @@
 
 body {
     font-family: Calibri, sans-serif;
+    color: #001A37;
 }
 
 .parent {
-    background-color: #FFF;
+    background-color: #E2E7E5;
 }
 
 .child {
-    background-color: #FFF4;
+    background-color: #fff;
     min-height: 100vh;
     max-width: 800px;
-    width: 100%;
     margin: 0 auto;
     outline: #EEE solid 3px;
     padding: 5px;
 }
 
 .child > h1 {
-    font-size: 22px;
+    font-size: 26px;
     padding: 10px;
     margin-bottom: 20px;
+    text-align: center;
 }
 
 .input {
@@ -31,12 +32,12 @@ body {
     border-radius: 11px;
     background-color: #fff;
     width: 220px;
-    border: 2px solid navy;
+    border: 2px solid #FFCC00;
     font-size: 18px;
 }
 
-.input:invalid {
-    border-color: red;
+.input:focus {
+    outline: none;
 }
 
 .form > div {
@@ -61,7 +62,7 @@ body {
 
 .invalid + .error-message {
     font-size: 14px;
-    color: darkred;
+    color: #FF0000;
     margin-top: 5px;
     visibility: visible;
     font-weight: bold;
@@ -71,9 +72,10 @@ body {
     font-size: 14px;
     padding: 10px;
     border-radius: 11px;
+    border-color: #0063AD;
 }
 
-.add_button {
+.add-button {
     float: right;
     margin-right: 20px;
 }
@@ -89,15 +91,15 @@ body {
 }
 
 .search input {
-    margin-left: 20px;
+    margin: 0 20px;
 }
 
 .search label {
+    position: absolute;
     top: -10px;
     left: 40px;
     padding: 0 5px;
     background-color: #fff;
-    position: absolute;
 }
 
 .table {
@@ -127,15 +129,19 @@ body {
     width: 140px;
     margin: 2px;
     border-radius: 4px;
-    border: 1px solid black;
+    border: 2px solid #FFCC00;
     font-size: 14px;
+}
+
+.edit-input-style:focus {
+    outline: none;
 }
 
 .in-table-button {
     margin: 2px 2px;
     font-size: 14px;
     border-radius: 4px;
-    border: 1px solid black;
+    border-color: #0063AD;
 }
 
 .deletion-confirm {
@@ -147,6 +153,6 @@ body {
     margin: 12px 12px 20px 0;
 }
 
-.edit-telephone-number.invalid {
-    border-color: red;
+.repeated-tel-number {
+    border-color: #FF4721;
 }
