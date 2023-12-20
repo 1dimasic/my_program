@@ -73,7 +73,12 @@ body {
     border-radius: 11px;
 }
 
-.add_delete_button {
+.add_button {
+    float: right;
+    margin-right: 20px;
+}
+
+.delete-all-button {
     float: right;
     margin-right: 20px;
 }
@@ -131,4 +136,17 @@ body {
     font-size: 14px;
     border-radius: 4px;
     border: 1px solid black;
+}
+
+.deletion-confirm {
+    display: none;
+}
+
+.alert {
+    float: left;
+    margin: 12px 12px 20px 0;
+}
+
+.edit-telephone-number.invalid {
+    border-color: red;
 }
