@@ -14,7 +14,7 @@ $(function () {
 
         inputName.removeClass("invalid");
         inputSurname.removeClass("invalid");
-        inputTelephoneNumber.removeClass("invalid");
+        inputTelephoneNumber.removeClass("invalid, repeated-tel-number");
 
         if (name.length === 0) {
             inputName.addClass("invalid");
@@ -30,12 +30,12 @@ $(function () {
 
         $(".telephone-number").each(function () {
             if ($(this).text() === telephoneNumber) {
-                inputTelephoneNumber.addClass("invalid");
+                inputTelephoneNumber.addClass("repeated-tel-number");
             }
         })
 
         if (inputName.hasClass("invalid") || inputSurname.hasClass("invalid") ||
-            inputTelephoneNumber.hasClass("invalid")) {
+            inputTelephoneNumber.hasClass("invalid") || inputTelephoneNumber.hasClass("repeated-tel-number")) {
             return;
         }
 
@@ -48,9 +48,9 @@ $(function () {
         }
 
 
-        function set_view() {
+        function viewContactsList() {
             contact.html(`<td class="id"></td>
-                          <td class="name"></td>
+                         <td class="name"></td>
                           <td class="surname"></td>
                           <td class="telephone-number"></td>
                           <td>
@@ -66,7 +66,7 @@ $(function () {
             contact.find(".telephone-number").text(telephoneNumber);
 
             if (contact.hasClass("in-place")) {
-                contacts.appendTo("in-place")
+                contact.appendTo("in-place")
                 contact.removeClass("in-place");
             } else {
                 contacts.append(contact);
@@ -75,19 +75,18 @@ $(function () {
             numbered();
 
             contact.find(".delete-button").click(function () {
-                $(".dialog-confirm").dialog({
+                $(".deletion-confirm").dialog({
                     resizable: false,
                     height: "auto",
                     width: 400,
                     modal: true,
                     buttons: {
-                        "Delete all items": function () {
+                        "Удалить": function () {
                             contact.remove();
-
                             $(this).dialog("close");
                             numbered();
                         },
-                        Cancel: function () {
+                        "Отменить": function () {
                             $(this).dialog("close");
                         }
                     }
@@ -116,7 +115,7 @@ $(function () {
                 const editTelephoneNumber = contact.find(".edit-telephone-number").val(telephoneNumber);
 
                 contact.find(".cancel-button").click(function () {
-                    set_view();
+                    viewContactsList();
                 });
 
                 contact.find(".save-button").click(function () {
@@ -126,7 +125,8 @@ $(function () {
 
                     editName.removeClass("invalid");
                     editSurname.removeClass("invalid");
-                    editTelephoneNumber.removeClass("invalid");
+                    editTelephoneNumber.removeClass("invalid, repeated-tel-number");
+
 
                     if (newName.length === 0) {
                         editName.addClass("invalid");
@@ -140,43 +140,51 @@ $(function () {
                         editTelephoneNumber.addClass("invalid");
                     }
 
-                    if (editName.hasClass(".invalid") || editSurname.hasClass(".invalid") || editTelephoneNumber.hasClass(".invalid")) {
+                    $(".telephone-number").each(function () {
+                        if ($(this).text() === newTelephoneNumber) {
+                            editTelephoneNumber.addClass("repeated-tel-number");
+                        }
+
+                    })
+
+                    if (editName.hasClass("invalid") || editSurname.hasClass("invalid") ||
+                        editTelephoneNumber.hasClass("invalid") || editTelephoneNumber.hasClass("repeated-tel-number")) {
                         return;
                     }
 
                     name = newName;
                     surname = newSurname;
                     telephoneNumber = newTelephoneNumber;
-                    set_view();
+                    viewContactsList();
                 });
             });
 
             $(".checkbox").click(function () {
                 if ($(".checkbox").is(":checked")) {
-                    $(".del").prop("disabled", false);
+                    $(".delete-all-button").prop("disabled", false);
                 } else {
                     $(".select-all").prop("checked", false);
-                    $(".del").prop("disabled", true);
+                    $(".delete-all-button").prop("disabled", true);
                 }
             })
 
-            $(".del").click(function () {
+            $(".delete-all-button").click(function () {
                 contact.find(".checkbox:checked").each(function () {
                     contact.remove();
                 })
 
                 numbered();
-                $(".del").prop("disabled", true);
+                $(".delete-all-button").prop("disabled", true);
                 $(".select-all").prop("checked", false);
             });
 
             $(".select-all").click(function () {
                 if ($(this).is(":checked")) {
                     $(".checkbox").prop("checked", true);
-                    $(".del").prop("disabled", false);
+                    $(".delete-all-button").prop("disabled", false);
                 } else {
                     $(".checkbox").prop("checked", false);
-                    $(".del").prop("disabled", true);
+                    $(".delete-all-button").prop("disabled", true);
                 }
             });
 
@@ -193,6 +201,8 @@ $(function () {
             })
         }
 
-        set_view();
+        inputName.text(" ");
+        viewContactsList();
+
     });
 });
