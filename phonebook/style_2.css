@@ -1,0 +1,54 @@
+* {
+    box-sizing: border-box;
+}
+
+.child > h1 {
+    font-size: 22px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.input {
+    padding: 10px;
+    border-radius: 11px;
+    background-color: #fff;
+    width: 220px;
+    max-width: 90%;
+    border: 2px solid navy;
+    font-size: 18px;
+}
+
+.parent {
+    background-color: #FFF;
+}
+
+.child {
+    background-color: #FFF4;
+    min-height: 100vh;
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+    outline: #EEE solid 3px;
+    padding: 5px;
+}
+
+.child div {
+    display: inline-block;
+    width: 32%;
+    margin-bottom: 10px;
+    text-align: center;
+    position: relative;
+}
+
+label {
+    position: absolute;
+    top: -10px;
+    left: 40px;
+    padding: 0 5px;
+    background-color: #fff;
+}
+
+.add_delete_button {
+    float: right;
+}
+

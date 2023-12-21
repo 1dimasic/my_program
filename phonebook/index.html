@@ -8,7 +8,7 @@
     <script defer src="script.js"></script>
     <link rel="stylesheet" href="reset.css">
     <link rel="stylesheet" href="jquery-ui-1.13.2/jquery-ui.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style_2.css">
 </head>
 <body>
 <div class="parent">
@@ -16,32 +16,27 @@
         <h1>Телефонная книга</h1>
         <form class="form">
             <div>
-                <label>Имя</label>
-                <input type="text" id="name" class="input" value="Дима">
-                <span class="error-message">Введите имя</span>
+                <label for="name">Имя</label>
+                <input type="text" id="name" class="input">
             </div>
             <div>
-                <label>Фамилия</label>
-                <input type="text" id="surname" class="input" value="Дима">
-                <span class="error-message">Введите фамилию</span>
+                <label for="surname">Фамилия</label>
+                <input type="text" id="surname" class="input">
             </div>
             <div>
-                <label>Номер телефона </label>
-                <input type="tel" id="telephone-number" class="input" value="123">
-                <span class="error-message">Введите номер телефона</span>
+                <label for="telephone-number">Номер телефона</label>
+                <input type="tel" id="telephone-number" class="input">
             </div>
             <button class="button add_delete_button">Добавить</button>
         </form>
-        <div class="search">
-            <div>
-                <label>Поиск</label>
-                <input type="text" class="input filter">
-            </div>
-            <div>
-                <button class="button set-filter">Применить</button>
-                <button class="button reset-filter">Сбросить</button>
-            </div>
+        <div>
+            <label for="filter"></label>
+            <input type="text" id="filter" class="input filter">
         </div>
+
+        <button class="button set-filter">Применить</button>
+        <button class="button reset-filter">Сбросить</button>
+
         <table class="table">
             <thead>
             <tr>
