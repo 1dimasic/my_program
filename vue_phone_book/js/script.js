@@ -1,4 +1,54 @@
 Vue.createApp({})
+    .component("ContactsList", {
+        data() {
+            return {
+                contacts: []
+            };
+        },
+
+        methods: {
+            addContact(contact) {
+                alert("2");
+                this.contacts.push(contact);
+            }
+        },
+
+        template: `
+            <div class="row mt-3">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                    <th>№</th>
+                    <th>Имя</th>
+                    <th>Фамилия</th>
+                    <th>Номер телефона</th>
+                    <th></th>
+                    <th>
+                        <input type="checkbox">
+                    </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template v-for="(index, contact) in contacts">
+                    <tr>
+                    <td>{{ index + 1 }}}</td>
+                    <td>{{ contact.name }}</td>
+                    <td>{{ contact.surname }}</td>
+                    <td>{{ contact.phoneNumber }}</td>
+                    <td>
+                        <button type="button" class="btn btn-sm"></button>
+                        <button type="button" class="btn btn-sm"></button>
+                    </td>
+                    <td>
+                        <input type="checkbox">
+                    </td>
+                    </tr>
+                    </template>
+                </tbody>
+            </table>
+            </div>`
+    })
+
     .component("ComponentForm", {
         data() {
             return {
@@ -10,7 +60,11 @@ Vue.createApp({})
 
         methods: {
             submit() {
-                ContactsList.addContact();
+                ContactsList.addContact({
+                    name: this.nameInput,
+                    surname: this.surnameInput,
+                    phoneNumber: this.phoneNumberInput
+                });
             }
         },
 
@@ -43,40 +97,5 @@ Vue.createApp({})
                 </div>
             </form>`
     })
-    .component("ContactsList", {
-        data() {
-            return {
-                contacts: []
-            };
-        },
-
-        methods: {
-            addContact() {
-                const contact = {
-                    name: form.nameInput,
-                    surname: form.surnameInput,
-                    phoneNumber: form.phoneNumberInput
-                }
-                alert("1");
-                this.contacts.push(contact);
-            }
-        },
-
-        template: `
-                  <template v-for="(index, contact) in contacts">
-                  <tr>
-                    <td>{{ index + 1 }}}</td>
-                    <td>{{ contact.name }}</td>
-                    <td>{{ contact.surname }}</td>
-                    <td>{{ contact.phoneNumber }}</td>
-                    <td>
-                        <button type="button" class="btn btn-sm"></button>
-                        <button type="button" class="btn btn-sm"></button>
-                    </td>
-                    <td>
-                        <input type="checkbox">
-                    </td>
-                  </tr>
-                  </template>`
-    })
     .mount("#app");
+
