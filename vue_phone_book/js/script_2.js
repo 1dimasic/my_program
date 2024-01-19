@@ -1,25 +1,20 @@
 Vue.createApp({})
-    .component("TodoList", {
+    .component("contactsList", {
         data() {
             return {
-                isValid: true,
-                items: [],
-                newTodoItemText: "",
-                newTodoItemId: 1
+                contacts: [],
             };
         },
 
         methods: {
-            addTodoItem() {
-                const newTodoItem = {
-                    id: this.newTodoItemId,
-                    text: this.newTodoItemText
+            addContact() {
+                const newContact = {
+                    name: this.nameInput,
+                    surname: this.surnameInput,
+                    phoneNumber: this.phoneNumberInput,
                 };
 
-                this.isValid = false;
-                this.newTodoItemId++;
-                this.items.push(newTodoItem);
-                this.newTodoItemText = "";
+                this.items.push(newContact);
             },
 
             deleteItem(item) {
@@ -27,29 +22,11 @@ Vue.createApp({})
             }
         },
 
-        template: `
-            <form @submit.prevent="addTodoItem" class="row needs-validation" :class="{'was-validated': isValid}" novalidate>
-                <div class="col-12">
-                    <label for="new-task" class="form-label"></label>
-                    <input v-model="newTodoItemText" type="text" id="new-task" class="form-control" required>
-                    <div class="invalid-feedback text-center">
-                    Введите текст задачи
-                    </div>
-                </div>
-                <div class="col-12 mt-4">
-                    <button class="btn btn-primary float-end">Добавить</button>
-                </div>
-            </form>
-
-            <ul @remove="deleteItem">
-                <todo-list-item v-for="item in items" 
-                                :key="item.id" 
-                                :item="item"></todo-list-item>
-            </ul>`
+        template: ``
     })
-    .component("TodoListItem", {
+    .component("contactItem", {
         props: {
-            item: {
+            contact: {
                 type: Object,
                 required: true
             }
@@ -60,20 +37,15 @@ Vue.createApp({})
         },
 
         methods: {
-            editTodoItem() {
+            editContactItem() {
 
             },
 
-            deleteTodoItem() {
+            deleteContactItem() {
                 this.$emit("remove", this.item);
             }
-
         },
 
-        template: `<li class="mt-3">
-                   {{ item.text }}
-                   <button @click="deleteTodoItem" class="btn btn-sm btn-danger float-end">Удалить</button>
-                   <button @click="editTodoItem" class="btn btn-sm btn-primary float-end me-2">Редактировать</button>
-                   </li>`
+        template: ``
     })
     .mount("#app");

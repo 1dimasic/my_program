@@ -5,42 +5,17 @@
     <title>Title</title>
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
     <script defer src="node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
-    <script defer></script>
+    <script defer src="node_modules/vue/dist/vue.global.js"></script>
+    <script defer src="js/script.js"></script>
 </head>
 <body>
-<div class="container">
+<div id="app" class="container">
     <div class="row">
         <div class="col text-center mb-4">
             <h1>Телефонная книга</h1>
         </div>
     </div>
-    <form class="form needs-validation">
-        <div class="row">
-            <div class="col-4">
-                <div class="input-group">
-                    <span class="input-group-text">Имя</span>
-                    <input type="text" id="name" class="form-control">
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="input-group">
-                    <span class="input-group-text">Фамилия</span>
-                    <input type="text" id="surname" class="form-control">
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="input-group">
-                    <span class="input-group-text">Номер телефона</span>
-                    <input type="tel" id="phone-number" class="form-control">
-                </div>
-            </div>
-        </div>
-        <div class="row mt-3">
-            <div>
-                <button @click="submit" class="col-1 float-end btn btn-primary">Добавить</button>
-            </div>
-        </div>
-    </form>
+    <component-form></component-form>
     <div class="row mt-3">
         <div class="col-6">
             <div class="input-group">
@@ -51,7 +26,7 @@
             </div>
         </div>
     </div>
-    <div class="row mt-3">
+    <div id="contacts-list" class="row mt-3">
         <table class="table table-hover">
             <thead>
             <th>№</th>
@@ -63,7 +38,9 @@
                 <input type="checkbox">
             </th>
             </thead>
-            <tbody></tbody>
+            <tbody>
+            <contacts-list></contacts-list>
+            </tbody>
         </table>
     </div>
 </div>
