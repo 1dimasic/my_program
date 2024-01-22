@@ -16,7 +16,7 @@ Vue.createApp({
                     isEditMode: false,
                     isSearchMode: true,
                     isChecked: false
-                }]
+                }],
         }
     },
 
@@ -25,47 +25,9 @@ Vue.createApp({
             this.contacts.push(contact);
         },
 
-        removeContact(index) {
-            this.contacts.splice(index, 1);
+        removeContacts() {
+            this.contacts = this.contacts.filter(contact => contact.isChecked === false);
         },
-
-        editContact(index) {
-            this.contacts[index].isEditMode = true;
-        },
-
-        notSaveContact(index) {
-            this.contacts[index].isEditMode = false;
-        },
-
-        SaveContact(index) {
-            let contactToSave = this.contacts[index];
-
-            let isRepeatedPhoneNumber = this.contacts
-                .filter(contact => contact.isEditMode === false)
-                .some(contact => contact.phoneNumber === contactToSave.phoneNumber)
-
-            if (isRepeatedPhoneNumber || contactToSave.name.length === 0 || contactToSave.surname.length === 0
-                || contactToSave.phoneNumber.length === 0) {
-                this.contacts[index].isEditMode = true;
-            } else {
-                this.contacts[index].isEditMode = false;
-            }
-        },
-
-        SearchContacts(searchingString) {
-            this.contacts.forEach(function (contact) {
-                if (contact.name.includes(searchingString) || contact.surname.includes(searchingString)
-                    || contact.phoneNumber.includes(searchingString)) {
-                    contact.isSearchMode = true;
-                } else {
-                    contact.isSearchMode = false;
-                }
-            });
-        },
-
-        resetSearchContacts() {
-            this.contacts.map(contact => contact.isSearchMode = true)
-        }
     },
 
     template: `
@@ -74,15 +36,15 @@ Vue.createApp({
                 <h1>Телефонная книга</h1>
             </div>
         </div>
-        <component-form @add="addContact"></component-form>
-        <search-form @search="SearchContacts" @reset="resetSearchContacts"></search-form>
-        <contacts-list :contacts="contacts" @remove="removeContact" 
-                                            @edit="editContact"
-                                            @cancel="notSaveContact"
-                                            @save="SaveContact"
-        </contacts-list>`
+        <component-form @add="addContact" :contacts="contacts"></component-form>
+        <search-form :contacts="contacts"></search-form>
+        <contacts-list :contacts="contacts" @removeContacts="removeContacts"</contacts-list>`
 })
     .component("SearchForm", {
+        props: {
+            contacts: Array
+        },
+
         data() {
             return {
                 searchingString: ""
@@ -90,13 +52,21 @@ Vue.createApp({
         },
 
         methods: {
-            search(searchingString) {
-                this.$emit("search", searchingString);
+            SearchContacts(searchingString) {
+                this.contacts.forEach(function (contact) {
+                    if (contact.name.includes(searchingString) || contact.surname.includes(searchingString)
+                        || contact.phoneNumber.includes(searchingString)) {
+                        contact.isSearchMode = true;
+                    } else {
+                        contact.isSearchMode = false;
+                        contact.isChecked = false;
+                    }
+                });
             },
 
-            reset() {
-                this.$emit("reset");
-            }
+            resetSearchContacts() {
+                this.contacts.map(contact => contact.isSearchMode = true)
+            },
         },
 
         template: `
@@ -104,18 +74,18 @@ Vue.createApp({
                 <div class="col-4">
                     <div class="input-group">
                         <span class="input-group-text">Поиск</span>
-                        <input type="tel" id="filter" v-model="searchingString" class="form-control">
+                        <input type="tel" v-model="searchingString" class="form-control">
                     </div>
                 </div>
                 <div class="col-4">
                     <button type="button" 
                             class="btn btn-success me-3" 
-                            @click="search(searchingString)">
+                            @click="SearchContacts(searchingString)">
                             Найти
                     </button>
                     <button type="button" 
                             class="btn btn-secondary" 
-                            @click="reset">
+                            @click="resetSearchContacts">
                             Сбросить
                     </button>       
                 </div>
@@ -128,37 +98,62 @@ Vue.createApp({
 
         data() {
             return {
-                selectAll: false
+                selectAll: false,
+                isNotAnyContactsChecked: true,
             }
         },
 
         methods: {
-            remove(index) {
-                this.$emit("remove", index);
+            removeContact(index) {
+                this.contacts.splice(index, 1);
             },
 
-            edit(index) {
-                this.$emit("edit", index);
+            editContact(index) {
+                this.contacts[index].isEditMode = true;
             },
 
-            cancel(index) {
-                this.$emit("cancel", index);
+            cancelContactEditMode(index) {
+                this.contacts[index].isEditMode = false;
             },
 
-            save(index) {
-                this.$emit("save", index);
+            saveContact(index) {
+                let contactToSave = this.contacts[index];
+
+                let isRepeatedPhoneNumber = this.contacts
+                    .filter(contact => contact.isEditMode === false)
+                    .some(contact => contact.phoneNumber === contactToSave.phoneNumber)
+
+                this.contacts[index].isEditMode = isRepeatedPhoneNumber || contactToSave.name.length === 0
+                    || contactToSave.surname.length === 0 || contactToSave.phoneNumber.length === 0;
             },
 
-            select() {
+            selectAllContacts() {
                 if (!this.selectAll) {
                     this.contacts.map(contact => contact.isChecked = true);
+                    this.isNotAnyContactsChecked = false;
                 } else {
                     this.contacts.map(contact => contact.isChecked = false);
+                    this.isNotAnyContactsChecked = true;
                 }
+            },
+
+            removeContacts() {
+                this.$emit("removeContacts");
+                this.isNotAnyContactsChecked = true;
+                this.selectAll = false;
+            },
+
+            checkContact(index) {
+                if (!this.contacts[index].isChecked) {
+                    this.contacts[index].isChecked = true;
+                    this.isNotAnyContactsChecked = false;
+                } else {
+                    this.contacts[index].isChecked = false;
+                }
+
+                this.isNotAnyContactsChecked = !this.contacts.some(contact => contact.isChecked === true);
             }
         },
-
-        watch: {},
 
         template: `
             <div class="row mt-3">
@@ -171,7 +166,7 @@ Vue.createApp({
                             <th>Номер телефона</th>
                             <th></th>
                             <th>
-                                <input type="checkbox" @click="select" v-model="selectAll">
+                                <input type="checkbox" @click="selectAllContacts" v-model="selectAll">
                             </th> 
                         </tr>
                     </thead>
@@ -187,30 +182,32 @@ Vue.createApp({
                                         <td>
                                             <button type="button" 
                                                     class="btn btn-sm btn-warning me-3" 
-                                                    @click="edit(index)">
+                                                    @click="editContact(index)">
                                                     Редактировать
                                             </button>
                                             <button type="button" 
                                                     class="btn btn-sm btn-danger" 
-                                                    @click="remove(index)">
+                                                    @click="removeContact(index)">
                                                     Удалить
                                             </button>
                                         </td>
                                         <template v-if="contact.isChecked">
                                              <td>
-                                                <input type="checkbox" checked>
+                                                <input type="checkbox" @click="checkContact(index)" checked>
                                              </td>
                                         </template>
                                         <template v-else>
                                              <td>
-                                                <input type="checkbox">
+                                                <input type="checkbox" @click="checkContact(index)">
                                              </td>
                                         </template>
                                     </tr>
                                 </template>
                                 <template v-else>
                                     <tr>
-                                        <td>{{ index + 1 }}</td>
+                                        <td>
+                                            {{ index + 1 }}
+                                        </td>
                                         <td>
                                             <input type="text" v-model="contact.name" class="form-control">
                                         </td>
@@ -218,16 +215,17 @@ Vue.createApp({
                                             <input type="text" v-model="contact.surname" class="form-control">
                                         </td>
                                         <td>
-                                            <input type="text" v-model="contact.phoneNumber" class="form-control"</td>
+                                            <input type="text" v-model="contact.phoneNumber" class="form-control"
+                                        </td>
                                         <td>
                                             <button type="button" 
                                                     class="btn btn-sm btn-success me-3" 
-                                                    @click="save(index)">
+                                                    @click="saveContact(index)">
                                                     Сохранить
                                             </button>
                                             <button type="button" 
                                                     class="btn btn-sm btn-secondary" 
-                                                    @click="cancel(index)">
+                                                    @click="cancelContactEditMode(index)">
                                                     Отменить
                                             </button>
                                         </td>
@@ -240,20 +238,44 @@ Vue.createApp({
                         </template>
                     </tbody>
                 </table>
-                <button></button>
+                <div class="row">
+                    <div>
+                        <button class="btn btn-danger float-end col-1" 
+                                :disabled="isNotAnyContactsChecked"
+                                @click="removeContacts">Удалить</button>
+                    </div>
+                </div>
             </div>`
     })
     .component("ComponentForm", {
+        props: {
+            contacts: Array
+        },
+
         data() {
             return {
                 nameInput: "",
                 surnameInput: "",
-                phoneNumberInput: ""
+                phoneNumberInput: "",
+                isRepeatedPhoneNumber: false
             };
         },
 
         methods: {
             submit() {
+                this.nameInput = this.nameInput.trim();
+                this.surnameInput = this.surnameInput.trim();
+                this.phoneNumberInput = this.phoneNumberInput.trim();
+
+                this.isRepeatedPhoneNumber = this.contacts
+                    .some(contact => contact.phoneNumber === this.phoneNumberInput);
+
+
+                if (this.isRepeatedPhoneNumber || this.nameInput.length === 0 || this.surnameInput.length === 0
+                    || this.phoneNumberInput.length === 0) {
+                    return;
+                }
+
                 const contact = {
                     name: this.nameInput,
                     surname: this.surnameInput,
@@ -263,35 +285,41 @@ Vue.createApp({
                     isChecked: false
                 };
 
+                this.nameInput = "";
+                this.surnameInput = "";
+                this.phoneNumberInput = "";
                 this.$emit("add", contact);
             }
         },
 
         template: `
-            <form @submit.prevent="submit" class="form needs-validation">
+            <form @submit.prevent="submit" class="needs-validation" novalidate>
                 <div class="row">
                     <div class="col-4">
-                        <div class="input-group">
-                            <span class="input-group-text">Имя</span>
-                            <input type="text" v-model="nameInput" class="form-control">
+                        <label for="name" class="form-label">Имя</label>
+                        <input type="text" id="name" v-model="nameInput" class="form-control" required>
+                        <div class="invalid-feedback">
+                        Введите имя
                         </div>
                     </div>
                     <div class="col-4">
-                        <div class="input-group">
-                            <span class="input-group-text">Фамилия</span>
-                            <input type="text" v-model="surnameInput" class="form-control">
+                        <label for="surname" class="form-label">Фамилия</label>
+                        <input type="text" id="surname" v-model="surnameInput" class="form-control" required>
+                        <div class="invalid-feedback">
+                        Введите фамилию
                         </div>
                     </div>
                     <div class="col-4">
-                        <div class="input-group">
-                            <span class="input-group-text">Номер телефона</span>
-                            <input type="tel" v-model="phoneNumberInput" class="form-control">
+                        <label for="phone-number" class="form-label">Номер телефона</label>
+                        <input type="tel" id="phone-number" v-model="phoneNumberInput" class="form-control" required>
+                        <div class="invalid-feedback">
+                        Введите номер телефона
                         </div>
                     </div>
                 </div>
                 <div class="row mt-3">
                     <div>
-                        <button class="col-1 float-end btn btn-primary">Добавить</button>
+                        <button class="col-auto float-end btn btn-primary">Добавить</button>
                     </div>
                 </div>
             </form>`
