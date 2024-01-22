@@ -257,21 +257,34 @@ Vue.createApp({
                 nameInput: "",
                 surnameInput: "",
                 phoneNumberInput: "",
-                isRepeatedPhoneNumber: false
+                isRepeatedPhoneNumber: false,
+                abc: false
+
+
             };
+        },
+
+        computed: {
+            nameValidation() {
+                return {
+                    "is-valid": this.nameInput.length !== 0,
+                    "is-invalid": this.abc && this.nameInput.trim().length === 0
+                }
+            }
         },
 
         methods: {
             submit() {
-                this.nameInput = this.nameInput.trim();
+                this.abc = this.nameInput.trim().length === 0;
                 this.surnameInput = this.surnameInput.trim();
                 this.phoneNumberInput = this.phoneNumberInput.trim();
 
                 this.isRepeatedPhoneNumber = this.contacts
                     .some(contact => contact.phoneNumber === this.phoneNumberInput);
 
+                this.nameValidation["is-invalid"] = this.nameInput.length === 0;
 
-                if (this.isRepeatedPhoneNumber || this.nameInput.length === 0 || this.surnameInput.length === 0
+                if (this.isRepeatedPhoneNumber || this.nameValidation["is-invalid"] || this.surnameInput.length === 0
                     || this.phoneNumberInput.length === 0) {
                     return;
                 }
@@ -289,29 +302,42 @@ Vue.createApp({
                 this.surnameInput = "";
                 this.phoneNumberInput = "";
                 this.$emit("add", contact);
+                this.abc = false;
             }
         },
 
         template: `
-            <form @submit.prevent="submit" class="needs-validation" novalidate>
+            <form @submit.prevent="submit" novalidate>
                 <div class="row">
                     <div class="col-4">
                         <label for="name" class="form-label">Имя</label>
-                        <input type="text" id="name" v-model="nameInput" class="form-control" required>
+                        <input type="text" id="name" 
+                                           v-model="nameInput" 
+                                           class="form-control" 
+                                           :class="nameValidation" 
+                                           required>
                         <div class="invalid-feedback">
                         Введите имя
                         </div>
                     </div>
                     <div class="col-4">
                         <label for="surname" class="form-label">Фамилия</label>
-                        <input type="text" id="surname" v-model="surnameInput" class="form-control" required>
+                        <input type="text" id="surname" 
+                                           v-model="surnameInput" 
+                                           class="form-control" 
+                                           :class="{'is-valid': isValidSurname, 'is-invalid': isInvalidSurname}" 
+                                           required>
                         <div class="invalid-feedback">
                         Введите фамилию
                         </div>
                     </div>
                     <div class="col-4">
                         <label for="phone-number" class="form-label">Номер телефона</label>
-                        <input type="tel" id="phone-number" v-model="phoneNumberInput" class="form-control" required>
+                        <input type="tel" id="phone-number" 
+                                          v-model="phoneNumberInput" 
+                                          class="form-control" 
+                                          :class="{'is-valid': isValidPhoneNumber, 'is-invalid': isInvalidPhoneNumber}"
+                                          required>
                         <div class="invalid-feedback">
                         Введите номер телефона
                         </div>
@@ -319,7 +345,7 @@ Vue.createApp({
                 </div>
                 <div class="row mt-3">
                     <div>
-                        <button class="col-auto float-end btn btn-primary">Добавить</button>
+                        <button class="col-auto float-end btn btn-primary" @click="checkValidate">Добавить</button>
                     </div>
                 </div>
             </form>`
