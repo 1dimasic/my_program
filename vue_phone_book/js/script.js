@@ -1,8 +1,22 @@
 Vue.createApp({
     data() {
         return {
-            contacts: [{name: "bob", surname: "dilan", phoneNumber: "123", isEditMode: false, isSearchMode: false, isChecked: false},
-                {name: "sue", surname: "dilan", phoneNumber: "456", isEditMode: false, isSearchMode: false, isChecked: false}]
+            contacts: [{
+                name: "bob",
+                surname: "dilan",
+                phoneNumber: "123",
+                isEditMode: false,
+                isSearchMode: true,
+                isChecked: false
+            },
+                {
+                    name: "sue",
+                    surname: "dilan",
+                    phoneNumber: "456",
+                    isEditMode: false,
+                    isSearchMode: true,
+                    isChecked: false
+                }]
         }
     },
 
@@ -27,7 +41,6 @@ Vue.createApp({
             let contactToSave = this.contacts[index];
 
             let isRepeatedPhoneNumber = this.contacts
-                .slice()
                 .filter(contact => contact.isEditMode === false)
                 .some(contact => contact.phoneNumber === contactToSave.phoneNumber)
 
@@ -41,15 +54,17 @@ Vue.createApp({
 
         SearchContacts(searchingString) {
             this.contacts.forEach(function (contact) {
-                if (!_.join(_.valuesIn(contact).filter(contactField => _.isString(contactField)), "")
-                    .includes(searchingString)) {
+                if (contact.name.includes(searchingString) || contact.surname.includes(searchingString)
+                    || contact.phoneNumber.includes(searchingString)) {
                     contact.isSearchMode = true;
+                } else {
+                    contact.isSearchMode = false;
                 }
             });
         },
 
         resetSearchContacts() {
-            this.contacts.map(contact => contact.isSearchMode = false)
+            this.contacts.map(contact => contact.isSearchMode = true)
         }
     },
 
@@ -136,16 +151,14 @@ Vue.createApp({
 
             select() {
                 if (!this.selectAll) {
-                    this.contacts.map(contact=>contact.isChecked = true);
+                    this.contacts.map(contact => contact.isChecked = true);
                 } else {
-                    this.contacts.map(contact=>contact.isChecked = false);
+                    this.contacts.map(contact => contact.isChecked = false);
                 }
             }
         },
 
-        watch: {
-
-        },
+        watch: {},
 
         template: `
             <div class="row mt-3">
@@ -164,7 +177,7 @@ Vue.createApp({
                     </thead>
                     <tbody>
                         <template v-for="(contact, index) in contacts" :key="index">
-                            <template v-if="!contact.isSearchMode">
+                            <template v-if="contact.isSearchMode">
                                 <template v-if="!contact.isEditMode">
                                     <tr>
                                         <td>{{ index + 1 }}</td>
@@ -227,6 +240,7 @@ Vue.createApp({
                         </template>
                     </tbody>
                 </table>
+                <button></button>
             </div>`
     })
     .component("ComponentForm", {
@@ -245,7 +259,7 @@ Vue.createApp({
                     surname: this.surnameInput,
                     phoneNumber: this.phoneNumberInput,
                     isEditMode: false,
-                    isSearchMode: false,
+                    isSearchMode: true,
                     isChecked: false
                 };
 
