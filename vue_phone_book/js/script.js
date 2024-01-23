@@ -95,8 +95,7 @@ Vue.createApp({
             return {
                 selectAll: false,
                 isNotAnyContactsChecked: true,
-                nameEditValid: [],
-                nameEditInvalid: []
+                contactEditField: []
             }
         },
 
@@ -107,8 +106,25 @@ Vue.createApp({
 
             editContact(index) {
                 this.contacts[index].isEditMode = true;
-                this.nameEditValid[index] = true;
-                this.nameEditInvalid[index] = false;
+
+                this.contactEditField[index] = {
+                    "name": {
+                        "valid": true,
+                        "invalid": false
+                    },
+
+                    "surname": {
+                        "valid": true,
+                        "invalid": false
+                    },
+
+                    "phoneNumber": {
+                        "valid": true,
+                        "invalid": false
+                    },
+
+                    "invalidPhoneNumberMessage": ""
+                };
             },
 
             cancelContactEditMode(index) {
@@ -118,15 +134,21 @@ Vue.createApp({
             saveContact(index) {
                 let contactToSave = this.contacts[index];
 
+                this.contactEditField[index].name.invalid = contactToSave.name.length === 0;
+                this.contactEditField[index].surname.invalid = contactToSave.surname.length === 0;
+
                 let isRepeatedPhoneNumber = this.contacts
                     .filter(contact => contact.isEditMode === false)
                     .some(contact => contact.phoneNumber === contactToSave.phoneNumber);
 
+                this.contactEditField[index].phoneNumber.invalid = contactToSave.phoneNumber.length === 0
+                    || isRepeatedPhoneNumber;
+
+                this.contactEditField[index].invalidPhoneNumberMessage = isRepeatedPhoneNumber
+                    ? "Введен существующий номер": "Введите номер телефона"
+
                 this.contacts[index].isEditMode = isRepeatedPhoneNumber || contactToSave.name.length === 0
                     || contactToSave.surname.length === 0 || contactToSave.phoneNumber.length === 0;
-
-                this.nameEditInvalid[index] = this.contacts[index].isEditMode;
-                this.nameEditValid[index] = !this.contacts[index].isEditMode;
             },
 
             selectAllContacts() {
@@ -156,12 +178,28 @@ Vue.createApp({
                 this.isNotAnyContactsChecked = !this.contacts.some(contact => contact.isChecked === true);
             },
 
-            nameEditValidation(index) {
+            validateNameEditField(index) {
                 return {
-                    "is-valid": this.nameEditValid[index],
-                    "is-invalid": this.nameEditInvalid[index]
+                    "is-valid": true,
+                    "is-invalid": this.contactEditField[index].name.invalid
                 }
-            }
+            },
+
+            validateSurnameEditField(index) {
+                return {
+                    "is-valid": true,
+                    "is-invalid": this.contactEditField[index].surname.invalid
+                }
+            },
+
+            validatePhoneNumberEditField(index) {
+                return {
+                    "is-valid": true,
+                    "is-invalid": this.contactEditField[index].phoneNumber.invalid
+                }
+            },
+
+
         },
 
         template: `
@@ -211,14 +249,24 @@ Vue.createApp({
                                             {{ index + 1 }}
                                         </td>
                                         <td>
-                                            <input type="text" v-model="contact.name" class="form-control" :class="nameEditValidation(index)">
+                                            <input type="text" v-model="contact.name" 
+                                                               class="form-control" 
+                                                               :class="validateNameEditField(index)">
                                             <div class="invalid-feedback">Введите имя</div>
                                         </td>
                                         <td>
-                                            <input type="text" v-model="contact.surname" class="form-control">
+                                            <input type="text" v-model="contact.surname" 
+                                                               class="form-control"
+                                                               :class="validateSurnameEditField(index)">
+                                            <div class="invalid-feedback">Введите фамилию</div>
                                         </td>
                                         <td>
-                                            <input type="text" v-model="contact.phoneNumber" class="form-control"
+                                            <input type="text" v-model="contact.phoneNumber" 
+                                                               class="form-control"
+                                                               :class="validatePhoneNumberEditField(index)">
+                                            <div class="invalid-feedback">
+                                            {{ contactEditField[index].invalidPhoneNumberMessage }}
+                                            </div>
                                         </td>
                                         <td>
                                             <button type="button" 
@@ -361,7 +409,7 @@ Vue.createApp({
                 </div>
                 <div class="row mt-3">
                     <div>
-                        <button class="col-auto float-end btn btn-primary" @click="checkValidate">Добавить</button>
+                        <button class="col-auto float-end btn btn-primary">Добавить</button>
                     </div>
                 </div>
             </form>`
