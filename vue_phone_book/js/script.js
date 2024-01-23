@@ -65,29 +65,24 @@ Vue.createApp({
             },
 
             resetSearchContacts() {
-                this.contacts.map(contact => contact.isSearchMode = true)
-            },
+                this.contacts.map(contact => contact.isSearchMode = true);
+            }
         },
 
         template: `
             <div class="row mt-3">
-                <div class="col-4">
+                <div class="col-sm-6">
                     <div class="input-group">
                         <span class="input-group-text">Поиск</span>
-                        <input type="tel" v-model="searchingString" class="form-control">
+                        <input type="text" v-model="searchingString" class="form-control" 
+                                                                     aria-describedby="search-button cancel-button">
+                        <button type="button" id="search-button" class="btn btn-success" 
+                                                                 @click="SearchContacts(searchingString)">Найти
+                        </button>
+                        <button type="button" class="btn btn-secondary" id="cancel-button"
+                                              @click="resetSearchContacts">Сбросить
+                        </button>       
                     </div>
-                </div>
-                <div class="col-4">
-                    <button type="button" 
-                            class="btn btn-success me-3" 
-                            @click="SearchContacts(searchingString)">
-                            Найти
-                    </button>
-                    <button type="button" 
-                            class="btn btn-secondary" 
-                            @click="resetSearchContacts">
-                            Сбросить
-                    </button>       
                 </div>
             </div>`
     })
@@ -100,6 +95,8 @@ Vue.createApp({
             return {
                 selectAll: false,
                 isNotAnyContactsChecked: true,
+                nameEditValid: [],
+                nameEditInvalid: []
             }
         },
 
@@ -110,6 +107,8 @@ Vue.createApp({
 
             editContact(index) {
                 this.contacts[index].isEditMode = true;
+                this.nameEditValid[index] = true;
+                this.nameEditInvalid[index] = false;
             },
 
             cancelContactEditMode(index) {
@@ -121,10 +120,13 @@ Vue.createApp({
 
                 let isRepeatedPhoneNumber = this.contacts
                     .filter(contact => contact.isEditMode === false)
-                    .some(contact => contact.phoneNumber === contactToSave.phoneNumber)
+                    .some(contact => contact.phoneNumber === contactToSave.phoneNumber);
 
                 this.contacts[index].isEditMode = isRepeatedPhoneNumber || contactToSave.name.length === 0
                     || contactToSave.surname.length === 0 || contactToSave.phoneNumber.length === 0;
+
+                this.nameEditInvalid[index] = this.contacts[index].isEditMode;
+                this.nameEditValid[index] = !this.contacts[index].isEditMode;
             },
 
             selectAllContacts() {
@@ -152,6 +154,13 @@ Vue.createApp({
                 }
 
                 this.isNotAnyContactsChecked = !this.contacts.some(contact => contact.isChecked === true);
+            },
+
+            nameEditValidation(index) {
+                return {
+                    "is-valid": this.nameEditValid[index],
+                    "is-invalid": this.nameEditInvalid[index]
+                }
             }
         },
 
@@ -191,16 +200,9 @@ Vue.createApp({
                                                     Удалить
                                             </button>
                                         </td>
-                                        <template v-if="contact.isChecked">
-                                             <td>
-                                                <input type="checkbox" @click="checkContact(index)" checked>
-                                             </td>
-                                        </template>
-                                        <template v-else>
-                                             <td>
-                                                <input type="checkbox" @click="checkContact(index)">
-                                             </td>
-                                        </template>
+                                        <td>
+                                            <input type="checkbox" @click="checkContact(index)" v-model="contact.isChecked">
+                                        </td>
                                     </tr>
                                 </template>
                                 <template v-else>
@@ -209,7 +211,8 @@ Vue.createApp({
                                             {{ index + 1 }}
                                         </td>
                                         <td>
-                                            <input type="text" v-model="contact.name" class="form-control">
+                                            <input type="text" v-model="contact.name" class="form-control" :class="nameEditValidation(index)">
+                                            <div class="invalid-feedback">Введите имя</div>
                                         </td>
                                         <td>
                                             <input type="text" v-model="contact.surname" class="form-control">
@@ -240,7 +243,7 @@ Vue.createApp({
                 </table>
                 <div class="row">
                     <div>
-                        <button class="btn btn-danger float-end col-1" 
+                        <button class="btn btn-danger float-end col-auto" 
                                 :disabled="isNotAnyContactsChecked"
                                 @click="removeContacts">Удалить</button>
                     </div>
@@ -257,35 +260,51 @@ Vue.createApp({
                 nameInput: "",
                 surnameInput: "",
                 phoneNumberInput: "",
-                isRepeatedPhoneNumber: false,
-                abc: false
-
-
+                isNameValid: false,
+                isSurnameValid: false,
+                isPhoneNumberValid: false,
+                isRepeatedPhoneNumber: false
             };
         },
 
         computed: {
             nameValidation() {
                 return {
-                    "is-valid": this.nameInput.length !== 0,
-                    "is-invalid": this.abc && this.nameInput.trim().length === 0
+                    "is-valid": this.nameInput.trim().length !== 0,
+                    "is-invalid": this.isNameValid && this.nameInput.trim().length === 0
                 }
+            },
+
+            surnameValidation() {
+                return {
+                    "is-valid": this.surnameInput.trim().length !== 0,
+                    "is-invalid": this.isSurnameValid && this.surnameInput.trim().length === 0
+                }
+            },
+
+            phoneValidation() {
+                return {
+                    "is-valid": this.phoneNumberInput.trim().length !== 0,
+                    "is-invalid": (this.isPhoneNumberValid && this.phoneNumberInput.trim().length === 0)
+                        || this.isRepeatedPhoneNumber
+                }
+            },
+
+            invalidPhoneNumberMessage() {
+                return this.isRepeatedPhoneNumber ? "Введен существующий номер" : "Введите номер телефона";
             }
         },
 
         methods: {
             submit() {
-                this.abc = this.nameInput.trim().length === 0;
-                this.surnameInput = this.surnameInput.trim();
-                this.phoneNumberInput = this.phoneNumberInput.trim();
+                this.isNameValid = this.nameInput.trim().length === 0;
+                this.isSurnameValid = this.surnameInput.trim().length === 0;
+                this.isPhoneNumberValid = this.phoneNumberInput.trim().length === 0;
 
                 this.isRepeatedPhoneNumber = this.contacts
                     .some(contact => contact.phoneNumber === this.phoneNumberInput);
 
-                this.nameValidation["is-invalid"] = this.nameInput.length === 0;
-
-                if (this.isRepeatedPhoneNumber || this.nameValidation["is-invalid"] || this.surnameInput.length === 0
-                    || this.phoneNumberInput.length === 0) {
+                if (this.isRepeatedPhoneNumber || this.isNameValid || this.isSurnameValid || this.isPhoneNumberValid) {
                     return;
                 }
 
@@ -302,14 +321,13 @@ Vue.createApp({
                 this.surnameInput = "";
                 this.phoneNumberInput = "";
                 this.$emit("add", contact);
-                this.abc = false;
             }
         },
 
         template: `
             <form @submit.prevent="submit" novalidate>
                 <div class="row">
-                    <div class="col-4">
+                    <div class="col-sm-4">
                         <label for="name" class="form-label">Имя</label>
                         <input type="text" id="name" 
                                            v-model="nameInput" 
@@ -320,27 +338,25 @@ Vue.createApp({
                         Введите имя
                         </div>
                     </div>
-                    <div class="col-4">
+                    <div class="col-sm-4">
                         <label for="surname" class="form-label">Фамилия</label>
                         <input type="text" id="surname" 
                                            v-model="surnameInput" 
                                            class="form-control" 
-                                           :class="{'is-valid': isValidSurname, 'is-invalid': isInvalidSurname}" 
+                                           :class="surnameValidation" 
                                            required>
                         <div class="invalid-feedback">
                         Введите фамилию
                         </div>
                     </div>
-                    <div class="col-4">
+                    <div class="col-sm-4">
                         <label for="phone-number" class="form-label">Номер телефона</label>
                         <input type="tel" id="phone-number" 
                                           v-model="phoneNumberInput" 
                                           class="form-control" 
-                                          :class="{'is-valid': isValidPhoneNumber, 'is-invalid': isInvalidPhoneNumber}"
+                                          :class="phoneValidation"
                                           required>
-                        <div class="invalid-feedback">
-                        Введите номер телефона
-                        </div>
+                        <div class="invalid-feedback">{{invalidPhoneNumberMessage}}</div>
                     </div>
                 </div>
                 <div class="row mt-3">
