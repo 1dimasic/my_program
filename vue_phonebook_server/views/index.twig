@@ -1,0 +1,120 @@
+{% extends 'layout.twig' %}
+
+{% block body %}
+    {% verbatim %}
+        <div id="app" class="container">
+            <h1>Телефонная книга</h1>
+                <form @submit.prevent="addContact" novalidate>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label for="name" class="form-label">Имя</label>
+                            <input type="text" id="name"
+                                               v-model="name"
+                                               class="form-control"
+                                               :class="nameValidationClass"
+                                               required>
+                            <div class="invalid-feedback">Введите имя</div>
+                        </div>
+                        <div class="col-sm-4">
+                            <label for="surname" class="form-label">Фамилия</label>
+                            <input type="text" id="surname"
+                                               v-model="surname"
+                                               class="form-control"
+                                               :class="surnameValidationClass"
+                                               required>
+                            <div class="invalid-feedback">Введите фамилию</div>
+                        </div>
+                        <div class="col-sm-4">
+                            <label for="phone-number" class="form-label">Номер телефона</label>
+                            <input type="tel" id="phone-number"
+                                              v-model="phoneNumber"
+                                              class="form-control"
+                                              :class="phoneValidationClass"
+                                              required>
+                            <div class="invalid-feedback">{{ invalidPhoneNumberMessage }}</div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div>
+                            <button class="col-auto float-end btn btn-primary">Добавить</button>
+                        </div>
+                    </div>
+                </form>
+                <div class="row">
+                <div class="col-sm-6">
+                    <label for="searching-string-input" class="form-label">Поиск</label>
+                    <div class="input-group">
+                        <input type="text" v-model="searchingString" class="form-control">
+                        <button type="button" class="btn btn-success" @click="loadContacts">Найти</button>
+                        <button type="button" class="btn btn-secondary" @click="resetSearch">Сбросить</button>
+                    </div>
+                </div>
+                </div>
+                <div class="row mt-3">
+                    <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>№</th>
+                            <th>Имя</th>
+                            <th>Фамилия</th>
+                            <th>Номер телефона</th>
+                            <th></th>
+                            <th>
+                            <input type="checkbox" @click="">
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(contact, index) in contacts" :key="index">
+                            <td>{{ index + 1 }}</td>
+                            <td>{{ contact.name }}</td>
+                            <td>{{ contact.surname }}</td>
+                            <td>{{ contact.phoneNumber }}</td>
+                            <td>
+                            <button type="button"
+                                      class="btn btn-sm btn-warning me-3"
+                                      @click="">
+                                Редактировать
+                            </button>
+                            <button type="button"
+                                      class="btn btn-sm btn-danger"
+                                      @click="deleteContact(contact)">
+                                Удалить
+                            </button>
+                            </td>
+                            <td>
+                             <input type="checkbox"
+                                     @click="">
+                            </td>
+                        </tr>
+                    </tbody>
+                    </table>
+                <div class="row">
+                    <div>
+                        <button class="btn btn-danger float-end col-auto"
+                                :disabled=true
+                                @click="">Удалить
+                        </button>
+                    </div>
+                </div>
+                </div>
+            <div ref="modal" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5">Подтверждение удаления</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Вы действительно хотите удалить контакт?
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button @click="deleteContact" class="btn btn-primary">Understood</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endverbatim %}
+{% endblock %}
