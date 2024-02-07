@@ -1,55 +1,51 @@
 <template>
-    <v-dialog
-        v-model="dialog"
-        fullscreen
-        :scrim="false"
-    >
+    <v-dialog v-model="dialog"
+              fullscreen
+              :scrim="false">
         <v-card>
-            <v-toolbar
-                dark
-                color="deep-purple-lighten-3"
-            >
-                <v-toolbar-title class="justify-center">{{ filmDetails.title }}</v-toolbar-title>
+            <v-toolbar color="deep-purple-lighten-3">
+                <v-toolbar-title class="justify-center text-h5">{{ filmDetails.title }}</v-toolbar-title>
                 <v-spacer></v-spacer>
-                <v-btn
-                    dark
-                    class="float-end"
-                    @click="dialog = false"
-                >
+                <v-btn class="float-end" @click="dialog = false">
                     <v-icon>mdi-close</v-icon>
                 </v-btn>
-
             </v-toolbar>
-
             <v-container>
                 <v-row no-gutters>
                     <v-col class="v-col-3">
                         <v-sheet class="pa-2 ma-2">
-                            <v-img :src="`https://image.tmdb.org/t/p/w500${filmDetails.poster_path}`"
-                                   width="250px"></v-img>
-                            <v-btn class="mt-5 float-end" size="medium" color="grey" icon="mdi-heart"
-                                   @click=""></v-btn>
+                            <v-img :src="`https://image.tmdb.org/t/p/w500${filmDetails.poster_path}`"></v-img>
+                            <v-btn flat size="large"
+                                   :color="favoriteAddButtonColor"
+                                   class="float-end mt-3"
+                                   @click="this.$emit('add')">{{ favoriteAddButtonText }}
+                            </v-btn>
                         </v-sheet>
                     </v-col>
-                    <v-col class="v-col-9">
+                    <v-col class="v-col-9 text-h5">
                         <v-sheet class="pa-2 ma-2">
                             {{ filmDetails.overview }}
-                            <v-spacer></v-spacer>
+                            <v-spacer class="mb-3"></v-spacer>
                             Дата выхода в прокат: {{ filmDetails.release_date }}
-                            <v-spacer></v-spacer>
+                            <v-spacer class="mb-3"></v-spacer>
                             Продолжительность: {{ filmDetails.runtime }} минут
-                            <v-spacer></v-spacer>
+                            <v-spacer class="mb-3"></v-spacer>
                             Рейтинг: {{ filmDetails.vote_average }}
-                            <v-spacer></v-spacer>
+                            <v-spacer class="mb-3"></v-spacer>
                             <template v-if="anyRecommendation">
                                 Рекомендации
                                 <v-container>
                                     <v-row>
-                                        <v-sheet v-for="recommendedFilm in recommendedFilms">
-                                            <v-img
-                                                :src="`https://image.tmdb.org/t/p/w500${recommendedFilm.poster_path}`"
-                                                width="105px" class="ma-1"></v-img>
-                                        </v-sheet>
+                                        <v-col lg="2"
+                                               md="3"
+                                               sm="4"
+                                               xs="12"
+                                               v-for="recommendedFilm in recommendedFilms">
+                                            <v-img :src="`https://image.tmdb.org/t/p/w500${recommendedFilm.poster_path}`"
+                                                    width="180px"
+                                                    class="ma-1">
+                                            </v-img>
+                                        </v-col>
                                     </v-row>
                                 </v-container>
                             </template>
@@ -66,13 +62,14 @@ import axios from "axios";
 
 export default {
     props: {
+        film: Object,
         isFavoriteFilm: Boolean
     },
 
     data() {
         return {
+            currentFilm: this.film,
             dialog: false,
-            id: null,
             filmDetails: null,
             recommendedFilms: null
         }
@@ -81,18 +78,25 @@ export default {
     computed: {
         anyRecommendation() {
             return this.recommendedFilms.length !== 0
+        },
+
+        favoriteAddButtonText() {
+            return this.isFavoriteFilm ? "Удалить" : "Добавить"
+        },
+
+        favoriteAddButtonColor() {
+            return this.isFavoriteFilm ? "teal" : "deep-purple-lighten-1"
         }
     },
 
     methods: {
-        show(id) {
-            this.id = id;
+        show() {
             this.getFilmDetails();
             this.getRecommendedFilms();
         },
 
         getFilmDetails() {
-            axios.get(`https://api.themoviedb.org/3/movie/${this.id}`, {
+            axios.get(`https://api.themoviedb.org/3/movie/${this.currentFilm.id}`, {
                 params: {
                     api_key: "e54fe9c197f033da85a056da00280567",
                     language: "ru"
@@ -103,7 +107,7 @@ export default {
         },
 
         getRecommendedFilms() {
-            axios.get(`https://api.themoviedb.org/3/movie/${this.id}/recommendations`, {
+            axios.get(`https://api.themoviedb.org/3/movie/${this.currentFilm.id}/recommendations`, {
                 params: {
                     api_key: "e54fe9c197f033da85a056da00280567",
                     language: "ru"

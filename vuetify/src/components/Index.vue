@@ -1,16 +1,24 @@
 <template>
     <v-layout class="rounded rounded-md">
-        <v-main class="d-flex align-center justify-center" style="min-height: 200px;">
+        <v-main class="d-flex align-center justify-center">
             <v-app-bar color="deep-purple-lighten-3">
-                <v-toolbar-title>Популярное кино</v-toolbar-title>
+                <v-toolbar-title class="text-h5 v-col-6">Популярное кино</v-toolbar-title>
+                <v-text-field class="v-col-2 mt-5"
+                              variant="outlined"
+                              v-model.trim="searchingString"
+                              clearable></v-text-field>
+                <v-btn @click="go">Favorite</v-btn>
             </v-app-bar>
             <v-infinite-scroll :onLoad="getPopularFilms">
                 <v-container>
                     <v-row align="center" justify="center">
-                        <v-col
-                            v-for="popularFilm in popularFilms"
-                            :key="popularFilm.id"
-                            cols="3">
+                        <v-col xl="2"
+                               lg="3"
+                               md="4"
+                               sm="6"
+                               xs="12"
+                               v-for="popularFilm in popularFilms"
+                               :key="popularFilm.id">
                             <film :film="popularFilm" :genres="genres"></film>
                         </v-col>
                     </v-row>
@@ -34,15 +42,24 @@ export default {
     data() {
         return {
             popularFilms: [],
-            favoriteFilmsId: [],
             page: 0,
             genres: [],
+            searchingString: ""
         }
     },
 
-    computed: {},
+    watch: {
+        searchingString(newSearchingString) {
+            this.searchFilms(newSearchingString);
+        }
+    },
 
     methods: {
+        searchFilms() {
+            _.debounce(function (abc) {
+                popularFilms
+            }, 500)
+        },
 
         getPopularFilms() {
             axios.get("https://api.themoviedb.org/3/movie/popular", {
@@ -74,3 +91,5 @@ export default {
     }
 }
 </script>
+<style scoped>
+</style>
